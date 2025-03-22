@@ -1,0 +1,3 @@
+CREATE DATABASE db_pm2e2;
+
+USE db_pm2e2;
