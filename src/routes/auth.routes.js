@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const authController = require("../controllers/auth.controller");
 
-router.get("/usuario", authController.verificarUsuario) 
+router.get("/token", authController.verificarUsuario) 
 
 
 module.exports=router;

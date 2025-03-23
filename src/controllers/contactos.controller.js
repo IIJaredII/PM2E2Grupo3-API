@@ -1,4 +1,5 @@
 const fs = require("fs");
+const path = require("path");
 const connection = require("../config/db");
 
 
@@ -6,14 +7,14 @@ const crearContacto = async (req,res)  => {
     try {
         
         const {nombre,idPais,latitud,longitud} = req.body;
-        const video = req.file ? req.file.path.replace(/\\/g, "/") : null;
+        const video = req.file ? path.basename(req.file.path) : null;
 
         if(!nombre || !idPais || !latitud || !longitud || !video) {
-            return res.status(0).send()
+            return res.status(400).json({ mensaje: "Todos los campos son obligatorios" });
         }
 
-        const results = await connection.promise.query(
-            "CALL insertContacto(?,?,?,?,?)",
+        const results = await connection.promise().query(
+            "CALL insertarContactos(?,?,?,?,?)",
             [nombre,idPais,latitud,longitud,video]
         );
 
@@ -43,6 +44,23 @@ const obtenerContacto = async (req, res) => {
         const [results] = await connection.promise().query('CALL obtenerContactos()');
 
         res.json(results[0]); 
+    }catch (error) {
+        console.error("Error al obtener contactos:", error);
+        res.status(500).json({ mensaje: "Error al obtener contactos" });
+    }
+}
+
+const obtenerContactoPorId = async (req, res) => {
+    try {
+        const [id] = req.body;
+        const [results] = await connection.promise().query('CALL obtenerContactoPorId(?)',[id]);
+        
+        if (results.length === 0) {
+            res.status(401).json({ mensaje: "No se encontro ese contacto" });
+        }else{
+            res.json(results[0]); 
+        }
+
     }catch (error) {
         console.error("Error al obtener contactos:", error);
         res.status(500).json({ mensaje: "Error al obtener contactos" });
@@ -103,5 +121,6 @@ module.exports = {
     crearContacto,
     obtenerContacto,
     eliminarContacto,
-    actualizarContacto
+    actualizarContacto,
+    obtenerContactoPorId
 };

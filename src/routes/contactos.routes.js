@@ -5,9 +5,9 @@ const upload = require("../middlewares/multerConfig");
 const {verifyToken} = require("../middlewares/authConfig");
 
 router.get("/",verifyToken,contactos.obtenerContacto);
-router.post("/",verifyToken,upload.single(""),contactos.crearContacto);
-router.delete("/",verifyToken,upload.single("foto"),contactos.eliminarContacto);
-router.put("/", verifyToken,upload.single("foto"), contactos.actualizarContacto);
-
+router.get("/id",verifyToken,contactos.obtenerContactoPorId);
+router.post("/",verifyToken,upload.single("video"),contactos.crearContacto);
+router.delete("/",verifyToken,upload.single("video"),contactos.eliminarContacto);
+router.put("/", verifyToken,upload.single("video"), contactos.actualizarContacto);
 
 module.exports = router;

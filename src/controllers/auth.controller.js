@@ -3,12 +3,14 @@ const {verifyToken,checkRole,generateToken} = require("../middlewares/authConfig
 
 const verificarUsuario = async (req, res) => {
     try {
-        const{correo,contrasena}= req.body;
+        const{identificador,contrasena}= req.body;
 
         const [results] = await connection.promise().query(
-            "CALL loginClientes(?)",
-            [correo]
+            "CALL autorizar(?)",
+            [identificador]
         );
+
+        console.log("Identificador",identificador);
 
         if (!results[0] || results[0].length === 0) {
             return res.status(404).json({ mensaje: "Correo o contraseña incorrecto" });
