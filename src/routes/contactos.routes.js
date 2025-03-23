@@ -6,7 +6,8 @@ const {verifyToken} = require("../middlewares/authConfig");
 
 router.get("/",verifyToken,contactos.obtenerContacto);
 router.post("/",verifyToken,upload.single(""),contactos.crearContacto);
-router.delete("", );
-router.put("", );
+router.delete("/",verifyToken,upload.single("foto"),contactos.eliminarContacto);
+router.put("/", verifyToken,upload.single("foto"), contactos.actualizarContacto);
+
 
 module.exports = router;
