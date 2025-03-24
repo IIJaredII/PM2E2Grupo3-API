@@ -25,7 +25,7 @@ const generateToken = (user) => {
     console.log("JWT_SECRET:", process.env.JWT_SECRET);
     
     const payload = {
-        id: user.contrasena
+        id: user.id
     };
     console.log("Generando token para: " , payload);
     const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: "1h" });

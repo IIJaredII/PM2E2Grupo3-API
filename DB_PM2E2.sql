@@ -157,7 +157,7 @@ CREATE PROCEDURE autorizar(
     IN pId INT
 )
 BEGIN
-    SELECT contrasena FROM autorizacion
+    SELECT id,contrasena FROM autorizacion
     WHERE id = pId;
 END $$
 
