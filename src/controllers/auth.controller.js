@@ -11,13 +11,15 @@ const verificarUsuario = async (req, res) => {
         );
 
         console.log("Identificador",identificador);
+        console.log("Contraseña",results[0]);
 
         if (!results[0] || results[0].length === 0) {
             return res.status(404).json({ mensaje: "Correo o contraseña incorrecto" });
         }
 
         const user = results[0][0];
-        if(user.Contraseña === contrasena) {
+
+        if(user.contrasena === contrasena) {
             const token = generateToken(user,"C");
             res.json({ token });
         }else{

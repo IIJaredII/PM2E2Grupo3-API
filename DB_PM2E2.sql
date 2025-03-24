@@ -1,190 +1,172 @@
-CREATE DATABASE db_pm2e2;
-USE db_pm2e2;
+CREATE DATABASE dbPm2E2;
+USE dbPm2E2;
 
-
-CREATE TABLE PAISES (
-    Id INT AUTO_INCREMENT PRIMARY KEY,
-    Nombre VARCHAR(255),
-    Codigo INT,
+CREATE TABLE paises (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(255),
+    codigo INT,
     longitud INT
 );
 
-
-CREATE TABLE Contactos (
-    Id INT AUTO_INCREMENT PRIMARY KEY,
-    Nombre VARCHAR(255),
-    Id_Pais INT,
-    Telefono VARCHAR(30),
-    Latitud DECIMAL(15,8),
-    Longitud DECIMAL(15,8),
-    Video_Contacto VARCHAR(255),
-    FOREIGN KEY (Id_Pais) REFERENCES PAISES(Id) ON DELETE CASCADE
+CREATE TABLE contactos (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(255),
+    idPais INT,
+    telefono VARCHAR(30),
+    latitud DECIMAL(15,8),
+    longitud DECIMAL(15,8),
+    videoContacto VARCHAR(255),
+    FOREIGN KEY (idPais) REFERENCES paises(id) ON DELETE CASCADE
 );
 
-
-CREATE TABLE AUTORIZACION (
-    Id INT AUTO_INCREMENT PRIMARY KEY,
-    Contraseña VARCHAR(255)
+CREATE TABLE autorizacion (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    contrasena VARCHAR(255)
 );
-
 
 DELIMITER $$
 
-
 CREATE PROCEDURE insertarContactos(
-    IN p_nombre VARCHAR(255),
-    IN p_idpais INT,
-    IN p_telefono INT,
-    IN p_latitud DECIMAL(15,8),
-    IN p_longitud DECIMAL(15,8),
-    IN p_video VARCHAR(255)
+    IN pNombre VARCHAR(255),
+    IN pIdPais INT,
+    IN pTelefono INT,
+    IN pLatitud DECIMAL(15,8),
+    IN pLongitud DECIMAL(15,8),
+    IN pVideo VARCHAR(255)
 )
 BEGIN
-    INSERT INTO Contactos (Nombre, Id_Pais,Telefono, Latitud, Longitud, Video_Contacto)
-    VALUES (p_nombre, p_idpais, p_telefono, p_latitud, p_longitud, p_video);
+    INSERT INTO contactos (nombre, idPais, telefono, latitud, longitud, videoContacto)
+    VALUES (pNombre, pIdPais, pTelefono, pLatitud, pLongitud, pVideo);
 END $$
 
 CREATE PROCEDURE actualizarContactos(
-    IN p_id INT,
-    IN p_nombre VARCHAR(255),
-    IN p_idpais INT,
-    IN p_telefono INT,
-    IN p_latitud DECIMAL(15,8),
-    IN p_longitud DECIMAL(15,8),
-    IN p_video VARCHAR(255)
+    IN pId INT,
+    IN pNombre VARCHAR(255),
+    IN pIdPais INT,
+    IN pTelefono INT,
+    IN pLatitud DECIMAL(15,8),
+    IN pLongitud DECIMAL(15,8),
+    IN pVideo VARCHAR(255)
 )
 BEGIN
-    UPDATE Contactos 
-    SET Nombre = p_nombre,
-        Id_Pais = p_idpais,
-        Telefono = p_telefono,
-        Latitud = p_latitud,
-        Longitud = p_longitud,
-        Video_Contacto = p_video
-    WHERE Id = p_id;
+    UPDATE contactos 
+    SET nombre = pNombre,
+        idPais = pIdPais,
+        telefono = pTelefono,
+        latitud = pLatitud,
+        longitud = pLongitud,
+        videoContacto = pVideo
+    WHERE id = pId;
 END $$
 
-
 CREATE PROCEDURE eliminarContactos(
-    IN p_id INT
+    IN pId INT
 )
 BEGIN
-    DELETE FROM Contactos 
-    WHERE Id = p_id;
+    DELETE FROM contactos WHERE id = pId;
 END $$
 
 CREATE PROCEDURE obtenerContactos()
 BEGIN
-    SELECT C.Id, C.Nombre, P.Codigo, C.Telefono FROM Contactos C
-    INNER JOIN PAISES P ON C.Id_Pais=P.Id;
+    SELECT c.id, c.nombre, p.codigo, c.telefono FROM contactos c
+    INNER JOIN paises p ON c.idPais = p.id;
 END $$
 
-
-CREATE PROCEDURE obtenerContactosPorID(
-    IN p_id INT
+CREATE PROCEDURE obtenerContactosPorId(
+    IN pId INT
 )
 BEGIN
-    SELECT C.Id, C.Nombre, P.Codigo, C.Telefono, C.Latitud, C.Longitud, C.Video_Contacto
-    FROM Contactos C
-    INNER JOIN PAISES P ON P.Id=C.Id_Pais
-    WHERE C.Id = p_id;
+    SELECT c.id, c.nombre, p.codigo, c.telefono, c.latitud, c.longitud, c.videoContacto
+    FROM contactos c
+    INNER JOIN paises p ON p.id = c.idPais
+    WHERE c.id = pId;
 END $$
 
 DELIMITER ;
-
 
 DELIMITER $$
 
 CREATE PROCEDURE insertarPais(
-    IN p_nombre VARCHAR(255),
-    IN p_codigo INT
+    IN pNombre VARCHAR(255),
+    IN pCodigo INT
 )
 BEGIN
-    INSERT INTO PAISES (Nombre, Codigo)
-    VALUES (p_nombre, p_codigo);
+    INSERT INTO paises (nombre, codigo)
+    VALUES (pNombre, pCodigo);
 END $$
 
 CREATE PROCEDURE actualizarPais(
-    IN p_id INT,
-    IN p_nombre VARCHAR(255),
-    IN p_codigo INT
+    IN pId INT,
+    IN pNombre VARCHAR(255),
+    IN pCodigo INT
 )
 BEGIN
-    UPDATE PAISES 
-    SET Nombre = p_nombre,
-        Codigo = p_codigo
-    WHERE Id = p_id;
+    UPDATE paises 
+    SET nombre = pNombre,
+        codigo = pCodigo
+    WHERE id = pId;
 END $$
 
-
 CREATE PROCEDURE eliminarPais(
-    IN p_id INT
+    IN pId INT
 )
 BEGIN
-    DELETE FROM PAISES WHERE Id = p_id;
+    DELETE FROM paises WHERE id = pId;
 END $$
 
 DELIMITER ;
-
 
 DELIMITER $$
 
 CREATE PROCEDURE insertarAutorizacion(
-    IN p_contraseña VARCHAR(255)
+    IN pContrasena VARCHAR(255)
 )
 BEGIN
-    INSERT INTO AUTORIZACION (Contraseña)
-    VALUES (p_contraseña);
+    INSERT INTO autorizacion (contrasena)
+    VALUES (pContrasena);
 END $$
-
 
 CREATE PROCEDURE actualizarAutorizacion(
-    IN p_id INT,
-    IN p_contraseña VARCHAR(255)
+    IN pId INT,
+    IN pContrasena VARCHAR(255)
 )
 BEGIN
-    UPDATE AUTORIZACION 
-    SET Contraseña = p_contraseña
-    WHERE Id = p_id;
+    UPDATE autorizacion 
+    SET contrasena = pContrasena
+    WHERE id = pId;
 END $$
-
 
 CREATE PROCEDURE eliminarAutorizacion(
-    IN p_id INT
+    IN pId INT
 )
 BEGIN
-    DELETE FROM AUTORIZACION WHERE Id = p_id;
+    DELETE FROM autorizacion WHERE id = pId;
 END $$
 
-CREATE PROCEDURE obtenerContraseñaPorID(
-    IN p_id INT,
-    OUT p_contraseña VARCHAR(255)
+CREATE PROCEDURE obtenerContrasenaPorId(
+    IN pId INT,
+    OUT pContrasena VARCHAR(255)
 )
 BEGIN
-    SELECT Contraseña INTO p_contraseña
-    FROM AUTORIZACION
-    WHERE Id = p_id;
+    SELECT contrasena INTO pContrasena
+    FROM autorizacion
+    WHERE id = pId;
 END $$
 
 CREATE PROCEDURE autorizar(
-    IN p_id INT
+    IN pId INT
 )
 BEGIN
-    SELECT Contraseña INTO p_contraseña
-    FROM AUTORIZACION
-    WHERE Id = p_id;
+    SELECT contrasena FROM autorizacion
+    WHERE id = pId;
 END $$
-
-
 
 DELIMITER ;
 
-INSERT INTO AUTORIZACION(Id,Contraseña)
-VALUES
-(202502,'contraseña');
+INSERT INTO autorizacion(id, contrasena)
+VALUES (202502, 'contraseña');
 
-
-INSERT INTO paises(nombre,codigo,longitud)
+INSERT INTO paises(nombre, codigo, longitud)
 VALUES
 ('Honduras', '+504', 8), 
 ('México', '+52', 10), 
