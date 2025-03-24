@@ -21,10 +21,11 @@ const checkRole = (roles) => {
     };
 };
 
-const generateToken = (user,rol) => {
+const generateToken = (user) => {
+    console.log(user);
+    
     const payload = {
-        id: user.identificador,
-        rol:rol
+        id: user.contrasena
     };
     console.log("Generando token para: " , payload);
     const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: "1h" });

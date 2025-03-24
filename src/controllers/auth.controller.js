@@ -20,7 +20,7 @@ const verificarUsuario = async (req, res) => {
         const user = results[0][0];
 
         if(user.contrasena === contrasena) {
-            const token = generateToken(user,"C");
+            const token = generateToken(user);
             res.json({ token });
         }else{
             res.status(404).json({ mensaje: "Contraseña incorrecta" });
