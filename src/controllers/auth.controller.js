@@ -1,5 +1,6 @@
 const connection = require("../config/db");
-const {verifyToken,checkRole,generateToken} = require("../middlewares/authConfig");
+require("dotenv").config();
+const jwt = require("jsonwebtoken");
 
 const verificarUsuario = async (req, res) => {
     try {
@@ -20,7 +21,8 @@ const verificarUsuario = async (req, res) => {
         const user = results[0][0];
 
         if(user.contrasena === contrasena) {
-            const token = generateToken(user);
+            const payload = { id: user.id };
+            const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: "1h" });
             res.json({ token });
         }else{
             res.status(404).json({ mensaje: "Contraseña incorrecta" });
