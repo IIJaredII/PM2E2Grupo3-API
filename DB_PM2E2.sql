@@ -14,6 +14,7 @@ CREATE TABLE Contactos (
     Id INT AUTO_INCREMENT PRIMARY KEY,
     Nombre VARCHAR(255),
     Id_Pais INT,
+    Telefono VARCHAR(30),
     Latitud DECIMAL(15,8),
     Longitud DECIMAL(15,8),
     Video_Contacto VARCHAR(255),
@@ -33,19 +34,21 @@ DELIMITER $$
 CREATE PROCEDURE insertarContactos(
     IN p_nombre VARCHAR(255),
     IN p_idpais INT,
+    IN p_telefono INT,
     IN p_latitud DECIMAL(15,8),
     IN p_longitud DECIMAL(15,8),
     IN p_video VARCHAR(255)
 )
 BEGIN
-    INSERT INTO Contactos (Nombre, Id_Pais, Latitud, Longitud, Video_Contacto)
-    VALUES (p_nombre, p_idpais, p_latitud, p_longitud, p_video);
+    INSERT INTO Contactos (Nombre, Id_Pais,Telefono, Latitud, Longitud, Video_Contacto)
+    VALUES (p_nombre, p_idpais, p_telefono, p_latitud, p_longitud, p_video);
 END $$
 
 CREATE PROCEDURE actualizarContactos(
     IN p_id INT,
     IN p_nombre VARCHAR(255),
     IN p_idpais INT,
+    IN p_telefono INT,
     IN p_latitud DECIMAL(15,8),
     IN p_longitud DECIMAL(15,8),
     IN p_video VARCHAR(255)
@@ -54,6 +57,7 @@ BEGIN
     UPDATE Contactos 
     SET Nombre = p_nombre,
         Id_Pais = p_idpais,
+        Telefono = p_telefono,
         Latitud = p_latitud,
         Longitud = p_longitud,
         Video_Contacto = p_video
@@ -71,7 +75,8 @@ END $$
 
 CREATE PROCEDURE obtenerContactos()
 BEGIN
-    SELECT Id, Nombre FROM Contactos;
+    SELECT C.Id, C.Nombre, P.Codigo, C.Telefono FROM Contactos C
+    INNER JOIN PAISES P ON C.Id_Pais=P.Id;
 END $$
 
 
@@ -79,9 +84,10 @@ CREATE PROCEDURE obtenerContactosPorID(
     IN p_id INT
 )
 BEGIN
-    SELECT Id, Nombre, Id_Pais, Latitud, Longitud, Video_Contacto
-    FROM Contactos
-    WHERE Id = p_id;
+    SELECT C.Id, C.Nombre, P.Codigo, C.Telefono, C.Latitud, C.Longitud, C.Video_Contacto
+    FROM Contactos C
+    INNER JOIN PAISES P ON P.Id=C.Id_Pais
+    WHERE C.Id = p_id;
 END $$
 
 DELIMITER ;
@@ -172,6 +178,10 @@ END $$
 
 
 DELIMITER ;
+
+INSERT INTO AUTORIZACION(Id,Contraseña)
+VALUES
+(202502,'contraseña');
 
 
 INSERT INTO paises(nombre,codigo,longitud)

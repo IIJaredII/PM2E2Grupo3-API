@@ -6,16 +6,16 @@ const connection = require("../config/db");
 const crearContacto = async (req,res)  => {
     try {
         
-        const {nombre,idPais,latitud,longitud} = req.body;
+        const {nombre,idPais,latitud,longitud,telefono} = req.body;
         const video = req.file ? path.basename(req.file.path) : null;
 
-        if(!nombre || !idPais || !latitud || !longitud || !video) {
+        if(!nombre || !idPais || !telefono || !latitud || !longitud || !video) {
             return res.status(400).json({ mensaje: "Todos los campos son obligatorios" });
         }
 
         const results = await connection.promise().query(
             "CALL insertarContactos(?,?,?,?,?)",
-            [nombre,idPais,latitud,longitud,video]
+            [nombre,idPais,telefono,latitud,longitud,video]
         );
 
         res.status(201).json({
@@ -83,7 +83,7 @@ const eliminarContacto = async (req,res) => {
 const actualizarContacto = async(req,res) => {
     try{
         
-        const {id,nombre,idpais,latitud,longitud} = req.body;
+        const {nombre,idPais,latitud,longitud,telefono} = req.body;
         const nuevoVideo = req.file ? req.file.path : null;
 
         const [contacto] = await connection.promise().query("SELECT video_contacto FROM contactos WHERE id=?",[id]);
@@ -102,7 +102,7 @@ const actualizarContacto = async(req,res) => {
 
         await connection.promise().query(
             "CALL actualizarContacto(?,?,?,?,?,?)",
-            [id,nombre,idpais,latitud,longitud,nuevoVideo]
+            [id,nombre,idPais,telefono,latitud,longitud,nuevoVideo]
         );
 
         res.json({mensaje: "Contacto actualizado exitosamente"});
