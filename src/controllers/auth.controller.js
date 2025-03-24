@@ -22,7 +22,7 @@ const verificarUsuario = async (req, res) => {
 
         if(user.contrasena === contrasena) {
             const payload = { id: user.id };
-            const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: "1h" });
+            const token = jwt.sign(payload, "Secreto", { expiresIn: "1h" });
             res.json({ token });
         }else{
             res.status(404).json({ mensaje: "Contraseña incorrecta" });
