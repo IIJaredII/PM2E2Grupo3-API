@@ -22,14 +22,23 @@ const checkRole = (roles) => {
 };
 
 const generateToken = (user) => {
-    console.log("JWT_SECRET:", process.env.JWT_SECRET);
-    
-    const payload = {
-        id: user.id
-    };
-    console.log("Generando token para: " , payload);
+    if (!process.env.JWT_SECRET) {
+        console.error("JWT_SECRET no está definido en el archivo .env.");
+        return res.status(500).json({ error: "JWT_SECRET no está definido en el archivo .env." });
+    }
+
+    if (!user || !user.id) {
+        console.error("El usuario no tiene un ID válido.");
+        return res.status(400).json({ error: "El usuario no tiene un ID válido." });
+    }
+
+    console.log("Generando token para: ", { id: user.id });
+
+    const payload = { id: user.id };
     const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: "1h" });
+
     return token;
 };
+
 
 module.exports = { verifyToken, checkRole, generateToken };
