@@ -22,7 +22,7 @@ const checkRole = (roles) => {
 };
 
 const generateToken = (user) => {
-    console.log(user);
+    console.log("JWT_SECRET:", process.env.JWT_SECRET);
     
     const payload = {
         id: user.contrasena
