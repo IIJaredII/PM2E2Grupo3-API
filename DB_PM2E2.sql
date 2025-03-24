@@ -29,7 +29,7 @@ DELIMITER $$
 CREATE PROCEDURE insertarContactos(
     IN pNombre VARCHAR(255),
     IN pIdPais INT,
-    IN pTelefono INT,
+    IN pTelefono VARCHAR(30),
     IN pLatitud DECIMAL(15,8),
     IN pLongitud DECIMAL(15,8),
     IN pVideo VARCHAR(255)
@@ -43,7 +43,7 @@ CREATE PROCEDURE actualizarContactos(
     IN pId INT,
     IN pNombre VARCHAR(255),
     IN pIdPais INT,
-    IN pTelefono INT,
+    IN pTelefono VARCHAR(30),
     IN pLatitud DECIMAL(15,8),
     IN pLongitud DECIMAL(15,8),
     IN pVideo VARCHAR(255)
@@ -72,7 +72,7 @@ BEGIN
     INNER JOIN paises p ON c.idPais = p.id;
 END $$
 
-CREATE PROCEDURE obtenerContactosPorId(
+CREATE PROCEDURE obtenerContactoPorId(
     IN pId INT
 )
 BEGIN
@@ -85,33 +85,9 @@ END $$
 DELIMITER ;
 
 DELIMITER $$
-
-CREATE PROCEDURE insertarPais(
-    IN pNombre VARCHAR(255),
-    IN pCodigo INT
-)
+CREATE PROCEDURE obtenerPaises()
 BEGIN
-    INSERT INTO paises (nombre, codigo)
-    VALUES (pNombre, pCodigo);
-END $$
-
-CREATE PROCEDURE actualizarPais(
-    IN pId INT,
-    IN pNombre VARCHAR(255),
-    IN pCodigo INT
-)
-BEGIN
-    UPDATE paises 
-    SET nombre = pNombre,
-        codigo = pCodigo
-    WHERE id = pId;
-END $$
-
-CREATE PROCEDURE eliminarPais(
-    IN pId INT
-)
-BEGIN
-    DELETE FROM paises WHERE id = pId;
+    SELECT id,codigo,longitud FROM paises;
 END $$
 
 DELIMITER ;

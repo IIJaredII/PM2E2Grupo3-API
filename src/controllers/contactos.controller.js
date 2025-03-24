@@ -5,7 +5,7 @@ const connection = require("../config/db");
 
 const crearContacto = async (req,res)  => {
     try {
-        
+
         const {nombre,idPais,latitud,longitud,telefono} = req.body;
         const video = req.file ? path.basename(req.file.path) : null;
 
@@ -14,7 +14,7 @@ const crearContacto = async (req,res)  => {
         }
 
         const results = await connection.promise().query(
-            "CALL insertarContactos(?,?,?,?,?)",
+            "CALL insertarContactos(?,?,?,?,?,?)",
             [nombre,idPais,telefono,latitud,longitud,video]
         );
 
@@ -25,7 +25,7 @@ const crearContacto = async (req,res)  => {
 
     } catch (error) {
         console.error("Error al crear contacto:", error);
-        
+
                 if (req.file) {
                     try {
                         fs.unlinkSync(req.file.path);
@@ -34,7 +34,7 @@ const crearContacto = async (req,res)  => {
                         console.error("Error al eliminar el video:", unlinkError);
                     }
                 }
-        
+
                 res.status(500).json({ mensaje: "Error al crear el contacto" });
     }
 };
@@ -52,11 +52,11 @@ const obtenerContacto = async (req, res) => {
 
 const obtenerContactoPorId = async (req, res) => {
     try {
-        const [id] = req.body;
+        const {id} = req.params;
         const [results] = await connection.promise().query('CALL obtenerContactoPorId(?)',[id]);
-        
+
         if (results.length === 0) {
-            res.status(401).json({ mensaje: "No se encontro ese contacto" });
+            res.status(404).json({ mensaje: "No se encontro ese contacto" });
         }else{
             res.json(results[0]); 
         }
@@ -82,7 +82,7 @@ const eliminarContacto = async (req,res) => {
 
 const actualizarContacto = async(req,res) => {
     try{
-        
+        const id = req.params;
         const {nombre,idPais,latitud,longitud,telefono} = req.body;
         const nuevoVideo = req.file ? req.file.path : null;
 
@@ -111,9 +111,6 @@ const actualizarContacto = async(req,res) => {
         console.error("Error al actualizar contacto: ",error);
         res.status(500).json({mensaje: "Error al actualizar contacto"});
     };
-
-    
-
 
 }
 
