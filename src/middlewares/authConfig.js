@@ -23,8 +23,7 @@ const checkRole = (roles) => {
 
 const generateToken = (user,rol) => {
     const payload = {
-        id: user.ID,
-        username: user.Nombre,
+        id: user.identificador,
         rol:rol
     };
     console.log("Generando token para: " , payload);
