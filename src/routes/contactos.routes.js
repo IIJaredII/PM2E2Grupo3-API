@@ -6,7 +6,7 @@ const {verifyToken} = require("../middlewares/authConfig");
 
 router.get("/",contactos.obtenerContacto);
 router.get("/:id",contactos.obtenerContactoPorId);
-router.get("/:nombre",contactos.obtenerContactoPorNombre);
+router.get("/nombre/:nombre",contactos.obtenerContactoPorNombre);
 router.post("/",upload.single("video"),contactos.crearContacto);
 router.delete("/:id",contactos.eliminarContacto);
 router.put("/:id",upload.single("video"), contactos.actualizarContacto);
