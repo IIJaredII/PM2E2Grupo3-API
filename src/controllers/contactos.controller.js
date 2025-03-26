@@ -70,6 +70,11 @@ const obtenerContactoPorId = async (req, res) => {
 const obtenerContactoPorNombre = async (req, res) => {
     try {
         const {nombre} = req.params;
+
+        if(!nombre){
+            return res.status(400).json({mensaje:"Por el amor a Dios, coloca un nombre, gracias"});
+        }
+
         const [results] = await connection.promise().query(
             "CALL obtenerContactoPorNombre(?)"
             ,[nombre]);
