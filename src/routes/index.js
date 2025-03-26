@@ -10,8 +10,5 @@ router.use("/contactos",contactoRoutes);
 router.use("/paises",paisesRoutes);
 router.use("/videos", express.static(path.join(__dirname, "../../datos")));
 
-router.use("/", (req, res) => {
-    res.status(200).send("OK");
-});
 
 module.exports = router;
