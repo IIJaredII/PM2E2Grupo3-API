@@ -69,7 +69,7 @@ const obtenerContactoPorId = async (req, res) => {
 
 const eliminarContacto = async (req, res) => {
     try {
-        const { id } = req.body;
+        const { id } = req.params;
 
         const [rows] = await connection.promise().query(
             "SELECT videoContacto FROM contactos WHERE id=?",
@@ -80,7 +80,7 @@ const eliminarContacto = async (req, res) => {
             return res.status(404).json({ mensaje: "Contacto no encontrado" });
         }
 
-        const videoNombre = rows[0].videoContacto; // Ahora sí obtenemos el valor correcto
+        const videoNombre = rows[0].videoContacto;
 
         await connection.promise().query("CALL eliminarContacto(?)", [id]);
 
@@ -100,39 +100,43 @@ const eliminarContacto = async (req, res) => {
 
 
 
-const actualizarContacto = async(req,res) => {
-    try{
-        const id = req.params;
-        const {nombre,idPais,latitud,longitud,telefono} = req.body;
-        const nuevoVideo = req.file ? req.file.path : null;
+const actualizarContacto = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { nombre, idPais, latitud, longitud, telefono } = req.body;
+        const nuevoVideo = req.file ? path.basename(req.file.path) : null; 
 
-        const [contacto] = await connection.promise().query("SELECT video_contacto FROM contactos WHERE id=?",[id]);
+        const [contacto] = await connection.promise().query(
+            "SELECT videoContacto FROM contactos WHERE id=?", 
+            [id]
+        );
 
-        if(contacto.length === 0){
-            return res.status(404).json({mensaje: "Contacto no encontrado"});
+        if (contacto.length === 0) {
+            return res.status(404).json({ mensaje: "Contacto no encontrado" });
         }
 
-        const videoActual = contacto[0].video_contacto;
+        const videoActual = contacto[0].videoContacto;
 
-        if(nuevoVideo && videoActual){
-            if(fs.existsSync(videoActual)){
-                fs.unlinkSync(videoActual);
+        if (nuevoVideo && videoActual) {
+            const videoPath = path.join(__dirname, "../../datos/", videoActual);
+            if (fs.existsSync(videoPath)) {
+                fs.unlinkSync(videoPath);
             }
         }
 
         await connection.promise().query(
-            "CALL actualizarContacto(?,?,?,?,?,?)",
-            [id,nombre,idPais,telefono,latitud,longitud,nuevoVideo]
+            "CALL actualizarContacto(?,?,?,?,?,?,?)",
+            [id, nombre, idPais, telefono, latitud, longitud, nuevoVideo || videoActual]
         );
 
-        res.json({mensaje: "Contacto actualizado exitosamente"});
+        res.json({ mensaje: "Contacto actualizado exitosamente" });
 
-    }catch(error){
-        console.error("Error al actualizar contacto: ",error);
-        res.status(500).json({mensaje: "Error al actualizar contacto"});
-    };
+    } catch (error) {
+        console.error("Error al actualizar contacto: ", error);
+        res.status(500).json({ mensaje: "Error al actualizar contacto" });
+    }
+};
 
-}
 
 module.exports = {
     crearContacto,
