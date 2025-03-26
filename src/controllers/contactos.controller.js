@@ -71,7 +71,7 @@ const eliminarContacto = async (req, res) => {
     try {
         const { id } = req.body;
 
-        const [videoNombre] = await connection.promise().query(
+        const videoNombre = await connection.promise().query(
             "SELECT videoContacto FROM contactos WHERE id=?",
             [id]
         );
@@ -82,7 +82,7 @@ const eliminarContacto = async (req, res) => {
 
         await connection.promise().query("CALL eliminarContacto(?)", [id]);
 
-        const videoPath = path.join(__dirname, "../../datos/", videoNombre[0].videoContacto);
+        const videoPath = path.join(__dirname, "../../datos/", videoNombre.videoContacto);
         if (fs.existsSync(videoPath)) {
             fs.unlinkSync(videoPath);
         }
