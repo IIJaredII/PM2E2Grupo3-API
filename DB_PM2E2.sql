@@ -68,7 +68,7 @@ END $$
 
 CREATE PROCEDURE obtenerContactos()
 BEGIN
-    SELECT c.id, c.nombre, p.codigo, c.telefono FROM contactos c
+    SELECT c.id, c.nombre, p.codigo, c.telefono, c.longitud, c.latitud FROM contactos c
     INNER JOIN paises p ON c.idPais = p.id;
 END $$
 
