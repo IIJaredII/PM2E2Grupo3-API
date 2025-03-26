@@ -71,7 +71,8 @@ const obtenerContactoPorNombre = async (req, res) => {
     try {
         const {nombre} = req.params;
         const [results] = await connection.promise().query(
-            'SELECT id, nombre, codigo, telefono, longitud, latitud FROM contactos WHERE nombre LIKE %?%',[nombre]);
+            "SELECT id, nombre, codigo, telefono, longitud, latitud FROM contactos WHERE nombre LIKE CONCAT('%', ?, '%')"
+            ,[nombre]);
 
         if (results.length === 0) {
             res.status(404).json({ mensaje: "No se encontro ese contacto" });
