@@ -67,6 +67,24 @@ const obtenerContactoPorId = async (req, res) => {
     }
 }
 
+const obtenerContactoPorNombre = async (req, res) => {
+    try {
+        const {nombre} = req.params;
+        const [results] = await connection.promise().query(
+            'SELECT id, nombre, codigo, telefono, longitud, latitud FROM contactos WHERE nombre LIKE %?%',[nombre]);
+
+        if (results.length === 0) {
+            res.status(404).json({ mensaje: "No se encontro ese contacto" });
+        }else{
+            res.json(results[0]); 
+        }
+
+    }catch (error) {
+        console.error("Error al obtener contactos:", error);
+        res.status(500).json({ mensaje: "Error al obtener contactos" });
+    }
+}
+
 const eliminarContacto = async (req, res) => {
     try {
         const { id } = req.params;
@@ -143,5 +161,6 @@ module.exports = {
     obtenerContacto,
     eliminarContacto,
     actualizarContacto,
-    obtenerContactoPorId
+    obtenerContactoPorId,
+    obtenerContactoPorNombre
 };

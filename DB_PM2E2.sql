@@ -39,7 +39,7 @@ BEGIN
     VALUES (pNombre, pIdPais, pTelefono, pLatitud, pLongitud, pVideo);
 END $$
 
-CREATE PROCEDURE actualizarContactos(
+CREATE PROCEDURE actualizarContacto(
     IN pId INT,
     IN pNombre VARCHAR(255),
     IN pIdPais INT,
