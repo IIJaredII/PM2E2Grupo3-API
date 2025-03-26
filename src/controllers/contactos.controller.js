@@ -71,18 +71,20 @@ const eliminarContacto = async (req, res) => {
     try {
         const { id } = req.body;
 
-        const videoNombre = await connection.promise().query(
+        const [rows] = await connection.promise().query(
             "SELECT videoContacto FROM contactos WHERE id=?",
             [id]
         );
 
-        if (!videoNombre.length) {
+        if (!rows.length) {
             return res.status(404).json({ mensaje: "Contacto no encontrado" });
         }
 
+        const videoNombre = rows[0].videoContacto; // Ahora sí obtenemos el valor correcto
+
         await connection.promise().query("CALL eliminarContacto(?)", [id]);
 
-        const videoPath = path.join(__dirname, "../../datos/", videoNombre.videoContacto);
+        const videoPath = path.join(__dirname, "../../datos/", videoNombre);
         if (fs.existsSync(videoPath)) {
             fs.unlinkSync(videoPath);
         }
@@ -94,6 +96,7 @@ const eliminarContacto = async (req, res) => {
         res.status(500).json({ mensaje: "Error al eliminar contacto" });
     }
 };
+
 
 
 
