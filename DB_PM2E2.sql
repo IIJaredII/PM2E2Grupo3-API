@@ -59,7 +59,7 @@ BEGIN
     WHERE id = pId;
 END $$
 
-CREATE PROCEDURE eliminarContactos(
+CREATE PROCEDURE eliminarContacto(
     IN pId INT
 )
 BEGIN

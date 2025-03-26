@@ -67,21 +67,34 @@ const obtenerContactoPorId = async (req, res) => {
     }
 }
 
-const eliminarContacto = async (req,res) => {
-    try{
-        const {id} = req.body;
-        const [videoNombre] = await connection.promise().query("SELECT videoContacto FROM contactos WHERE id=?",[id]);
+const eliminarContacto = async (req, res) => {
+    try {
+        const { id } = req.body;
 
-        await connection.promise().query("CALL eliminarContacto(?)",[id]);
-        fs.unlinkSync(path.join(__dirname, "../../datos/"+videoNombre[0][0]));
-        res.json({mensaje: "Contacto eliminado correctamente"});
+        const [videoNombre] = await connection.promise().query(
+            "SELECT videoContacto FROM contactos WHERE id=?",
+            [id]
+        );
 
+        if (!videoNombre.length) {
+            return res.status(404).json({ mensaje: "Contacto no encontrado" });
+        }
 
-    }catch(error){
-        console.error("Error al eliminar contacto: ",error);
-        res.status(500).json({mensaje: "Error al eliminar contacto"});
+        await connection.promise().query("CALL eliminarContacto(?)", [id]);
+
+        const videoPath = path.join(__dirname, "../../datos/", videoNombre[0].videoContacto);
+        if (fs.existsSync(videoPath)) {
+            fs.unlinkSync(videoPath);
+        }
+
+        res.json({ mensaje: "Contacto eliminado correctamente" });
+
+    } catch (error) {
+        console.error("Error al eliminar contacto: ", error);
+        res.status(500).json({ mensaje: "Error al eliminar contacto" });
     }
 };
+
 
 
 const actualizarContacto = async(req,res) => {
