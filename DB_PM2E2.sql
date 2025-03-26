@@ -82,6 +82,16 @@ BEGIN
     WHERE c.id = pId;
 END $$
 
+CREATE PROCEDURE obtenerContactoPorNombre(
+    IN pNombre VARCHAR(255)
+)
+BEGIN
+    SELECT c.id, c.nombre, p.codigo, c.telefono, c.latitud, c.longitud, c.videoContacto
+    FROM contactos c
+    INNER JOIN paises p ON p.id = c.idPais
+    WHERE c.nombre LIKE CONCAT('%', pNombre, '%');
+END $$
+
 DELIMITER ;
 
 DELIMITER $$
